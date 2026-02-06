@@ -4,7 +4,7 @@ A Django REST Framework application boilerplate with basic CRUD API endpoints.
 
 ## Features
 
-- Django 5.0 with Django REST Framework
+- Django 4.2 LTS with Django REST Framework
 - RESTful API with ViewSets
 - CORS support
 - Admin interface
