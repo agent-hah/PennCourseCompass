@@ -1,4 +1,4 @@
-from app import db
+from extensions import db
 
 # Your database models should go here.
 # Check out the Flask-SQLAlchemy quickstart for some good docs!
@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 course_instructor_association = Table(
     "department_course_association",
     db.metadata,
-    db.Column("instructor_id", ForeignKey("instructor.id"), primary_key = True),
+    db.Column("instructor_id", ForeignKey("instructors.id"), primary_key = True),
     db.Column("course_id", ForeignKey("courses.id"), primary_key = True)
 )
 
@@ -31,9 +31,9 @@ class Course(db.Model):
     description: Mapped[str] = mapped_column(db.String)
 
     instructors = db.relationship(
-        "instructors", 
+        "Instructor",
         secondary = course_instructor_association, 
-        backpopulates = "courses", 
+        back_populates = "courses",
         lazy = True
         )
 
@@ -44,7 +44,7 @@ class Department(db.Model):
 
     name: Mapped[str] = mapped_column(db.String(5), unique = True)
     
-    courses = db.relationship("courses", backref = "dept", lazy = 'dynamic')
+    courses = db.relationship("Course", backref = "dept", lazy = 'dynamic')
 
 class Instructor(db.Model):
     __tablename__ = "instructors"
@@ -54,9 +54,9 @@ class Instructor(db.Model):
     name: Mapped[str] = mapped_column(db.String)
 
     courses = db.relationship(
-        "courses",
+        "Course",
         secondary = course_instructor_association,
-        backpopulates = "courses",
+        back_populates = "instructors",
         lazy = True
         )
     

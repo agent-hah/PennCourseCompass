@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "backend-challenge"
+name = "backend"
 version = "0.1.0"
 description = "Backend Challenge for Penn Labs"
 authors = ["Christopher Liu <liuchris@seas.upenn.edu>"]

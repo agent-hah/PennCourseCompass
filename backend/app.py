@@ -2,14 +2,13 @@ import json
 from flask import Flask, jsonify, request
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
-
-DB_FILE = "penncoursescompass.db"
-
+from extensions import db
 from models import *
 
+DB_FILE = "penncoursescompass.db"
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_FILE}"
-db = SQLAlchemy(app)
+db.init_app(app)
 
 import re
 
