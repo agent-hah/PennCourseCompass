@@ -30,12 +30,21 @@ class Course(db.Model):
 
     description: Mapped[str] = mapped_column(db.String)
 
-    instructors = db.relationship(
+    instructors: Mapped[List["Instructor"]] = relationship(
         "Instructor",
         secondary = course_instructor_association, 
         back_populates = "courses",
         lazy = True
         )
+    
+    def to_dict(self):
+        return {
+            "dept_name": self.dept.name, #type: ignore
+            "name": self.name,
+            "course_code": self.number,
+            "description": self.description,
+            "instructors": [instructor.name for instructor in self.instructors]
+        }
 
 class Department(db.Model):
     __tablename__ = "departments"
@@ -44,7 +53,13 @@ class Department(db.Model):
 
     name: Mapped[str] = mapped_column(db.String(5), unique = True)
     
-    courses = db.relationship("Course", backref = "dept", lazy = 'dynamic')
+    courses: Mapped[List["Course"]] = relationship("Course", backref = "dept", lazy = 'dynamic')
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "courses": [(f'{course.dept.name}{course.number}', course.name) for course in self.courses] # type: ignore
+        }
 
 class Instructor(db.Model):
     __tablename__ = "instructors"
@@ -53,10 +68,15 @@ class Instructor(db.Model):
 
     name: Mapped[str] = mapped_column(db.String)
 
-    courses = db.relationship(
+    courses: Mapped[List["Course"]] = relationship(
         "Course",
         secondary = course_instructor_association,
         back_populates = "instructors",
         lazy = True
         )
     
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "courses": [(f'{course.dept.name}{course.number}', course.name) for course in self.courses] # type: ignore
+        }
